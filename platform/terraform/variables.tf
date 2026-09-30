@@ -41,6 +41,16 @@ variable "deletion_protection" {
   default     = true
 }
 
+variable "final_snapshot_identifier" {
+  description = "Optional unique RDS snapshot name to retain on destroy; null skips the final snapshot. Set explicitly before destroy."
+  type        = string
+  default     = null
+  validation {
+    condition     = var.final_snapshot_identifier == null ? true : can(regex("^[a-zA-Z](?:[a-zA-Z0-9]|-(?:[a-zA-Z0-9]))*$", var.final_snapshot_identifier)) && length(var.final_snapshot_identifier) <= 255
+    error_message = "Use 1-255 letters, digits or single hyphens; start with a letter and end with a letter or digit."
+  }
+}
+
 variable "domain_name" {
   description = "Optional full hostname, e.g. api.example.com. Leave empty for HTTP-only lab."
   type        = string

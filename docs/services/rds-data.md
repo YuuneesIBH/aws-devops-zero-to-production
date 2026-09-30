@@ -30,7 +30,7 @@ Secret access has both permission and cost implications. Fetching the secret for
 
 ## 3. Storage, backup and deletion
 
-The example allocates 20 GiB of encrypted storage and permits storage autoscaling up to 100 GiB. Autoscaling can increase the billed storage; it does not automatically shrink it. Backup retention is seven days. A backup policy is incomplete until a restore drill proves recovery time and data integrity. `deletion_protection` defaults to true in Terraform; the example tfvars turns it off for a disposable lab. A final snapshot may remain billable after instance deletion. Never remove Terraform state as a substitute for destroying the instance.
+The example allocates 20 GiB of encrypted storage and permits storage autoscaling up to 100 GiB. Autoscaling can increase the billed storage; it does not automatically shrink it. Backup retention is seven days. A backup policy is incomplete until a restore drill proves recovery time and data integrity. `deletion_protection` defaults to true in Terraform; the example tfvars turns it off for a disposable lab. `final_snapshot_identifier` is a separate choice: leave it null to skip a final snapshot, or set a unique name and apply before destroy to retain one. A retained snapshot may remain billable after instance deletion. Never remove Terraform state as a substitute for destroying the instance.
 
 Backups and snapshots do not prevent a bad schema migration or a malicious write from reaching the database. Define recovery point and recovery time objectives, test point-in-time restore where supported and verify application compatibility with the restored state.
 

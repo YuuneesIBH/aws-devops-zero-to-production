@@ -94,7 +94,7 @@ Without TLS, call `http://NLB_HOST/health` and `http://NLB_HOST/ready`. `/ready`
 1. Stop new deploys. Remove optional DNS CNAME via Route 53 console or CLI.
 2. Run `helm uninstall platform-api -n platform`; wait until the AWS NLB is gone. Inspect failed test hook Pods if present, then delete namespace `platform`.
 3. Delete all images in the ECR repository (it has `force_delete = false`).
-4. If `deletion_protection = true`, intentionally change it to `false` and apply a reviewed plan first. Decide whether to retain a final DB snapshot; snapshots and secrets can incur charges.
+4. Decide whether to retain a final DB snapshot. Set `final_snapshot_identifier` to a new, unique name in `terraform.tfvars` to create one; `null` skips it. Review and apply that change before destroy. If `deletion_protection = true`, intentionally change it to `false` and apply a reviewed plan first. These are separate choices. A retained snapshot can incur charges and is not removed by this Terraform destroy.
 5. From `platform/terraform`, run `terraform plan -destroy`, review, then `terraform destroy`. Confirm RDS, EKS, NAT, NLB, ECR, EIPs and VPC resources are absent in AWS. Protect or retire the state bucket separately after checking object versions and lock files.
 
 Do not delete Terraform state to “clean up”; that leaves live resources untracked. Do not run destroy against an account with unrelated resources or an environment still serving users.

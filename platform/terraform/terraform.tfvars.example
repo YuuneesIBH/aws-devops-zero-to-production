@@ -3,6 +3,8 @@ aws_region        = "eu-west-1"
 name              = "devops-platform"
 # Only for a disposable lab; keep true for long-lived environments.
 deletion_protection = false
+# Optional final snapshot on destroy. Choose a new name for each teardown.
+# final_snapshot_identifier = "devops-platform-final-20260930"
 # Optional TLS with an existing public Route 53 hosted zone.
 # domain_name     = "api.example.com"
 # route53_zone_id = "Z123456789"
