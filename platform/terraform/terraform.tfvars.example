@@ -1,0 +1,10 @@
+github_repository = "YOUR_ORG/aws-devops-zero-to-production"
+aws_region        = "eu-west-1"
+name              = "devops-platform"
+# Only for a disposable lab; keep true for long-lived environments.
+deletion_protection = false
+# Optional TLS with an existing public Route 53 hosted zone.
+# domain_name     = "api.example.com"
+# route53_zone_id = "Z123456789"
+# Optional RDS alarm delivery. Confirm SNS email subscription after apply.
+# alert_email = "operator@example.com"

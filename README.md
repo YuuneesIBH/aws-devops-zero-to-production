@@ -1,6 +1,6 @@
 # AWS DevOps: Zero to Production
 
-A hands-on path from first principles to operating an AWS application. Read the mental model, run a small local experiment, then inspect the cloud design and failure modes. This repository is a growing handbook, not a claim that every production system has the same architecture.
+A hands-on path from first principles to operating an AWS application. Read the mental model, run a small local experiment, then build the [deployable platform](platform/README.md) when ready. This repository is a growing handbook, not a claim that every production system has the same architecture.
 
 > **Cost and security:** AWS labs can incur charges, including resources left idle. Set a budget and alerts before creating anything. Never use the root user for routine work, commit credentials, or assume a lab is free. Run each lab's cleanup and confirm deletion in the AWS console. Terraform state can contain secrets; protect it accordingly.
 
@@ -18,7 +18,7 @@ Explain a browser request from DNS through TLS, load balancer, workload and data
 2. [Git and cloud](docs/04-git-cloud.md) → [AWS and IAM](docs/05-aws-iam.md) → [VPC](docs/06-vpc.md).
 3. [Compute, storage and databases](docs/07-compute-data.md) → [Docker lab](labs/01-local-api/README.md) → [Kubernetes](docs/08-kubernetes-eks.md).
 4. [Terraform](docs/09-terraform.md) → [VPC lab](labs/02-terraform-vpc/README.md) → [CI/CD](docs/10-delivery.md).
-5. [Operations](docs/11-operations.md) → [failure lab](labs/03-failure-lab/README.md) → [capstone design](architecture/capstone.md).
+5. [Operations](docs/11-operations.md) → [failure lab](labs/03-failure-lab/README.md) → [deployable platform](platform/README.md) → [capstone design](architecture/capstone.md).
 
 No AWS account is needed for reading or the local Python lab. Docker and Kubernetes are optional until their labs. The Terraform lab needs an AWS account, Terraform, AWS CLI and permission to create its listed resources.
 
@@ -37,7 +37,7 @@ flowchart LR
   Terraform --> VPC[VPC / IAM / EKS]
 ```
 
-This is a target architecture, not a deployment supplied by this first release. The local labs teach components independently; the [roadmap](ROADMAP.md) tracks missing integration work.
+The [platform implementation](platform/README.md) supplies the AWS infrastructure and deployment path; it has passed static validation but needs verification in a configured AWS account. The [roadmap](ROADMAP.md) tracks remaining work.
 
 ## Repository map
 
@@ -49,7 +49,8 @@ This is a target architecture, not a deployment supplied by this first release. 
 | `kubernetes/` | Local Deployment and Service example |
 | `runbooks/` | Production triage templates |
 | `architecture/` | System-level design and tradeoffs |
-| `.github/workflows/` | Local checks in CI; no cloud credentials |
+| `.github/workflows/` | Local checks and OIDC-based platform deployment |
+| `platform/` | Deployable EKS, RDS, ECR, Pod Identity and GitHub OIDC path |
 
 ## Checkpoints
 

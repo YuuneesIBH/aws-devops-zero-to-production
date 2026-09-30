@@ -10,7 +10,7 @@ Status reflects reviewed, substantive material, not empty directories.
 | Terraform VPC lab | Complete | Separate state bootstrap and private endpoints |
 | CI/CD fundamentals and local CI | Complete | Reviewed OIDC deployment example |
 | Observability, security and incident basics | Complete | Working metrics and alerting stack |
-| EKS, RDS, ALB, TLS and full capstone implementation | In Progress | Deployable modules and integration verification |
+| EKS Auto Mode, RDS, ECR, NLB, optional TLS and OIDC deployment | In Progress | Validate live in a disposable AWS account; then harden and add ALB option |
 | 18 progressive projects, failure labs and full runbook library | In Progress | Expand beyond included starter labs |
 | VPN, cost optimization, interview guide and cheatsheets | Not Started | Detailed chapters and exercises |
 

@@ -1,6 +1,6 @@
 # Production-style capstone design
 
-**Status:** design exercise; deployable EKS/RDS implementation is [roadmap work](../ROADMAP.md). **Difficulty:** advanced. **Cost:** EKS, NAT, ALB, RDS, storage and data transfer can accrue ongoing charges. Estimate current regional prices and set budgets before building.
+**Status:** design exercise plus [deployable first platform](../platform/README.md); AWS integration remains unverified. **Difficulty:** advanced. **Cost:** EKS, NAT, load balancing, RDS, storage and data transfer can accrue ongoing charges. Estimate current regional prices and set budgets before building.
 
 ```mermaid
 flowchart LR

@@ -1,0 +1,55 @@
+name: Deploy platform API
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 -m unittest discover -s platform/app/tests
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    environment: platform
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      CLUSTER_NAME: ${{ vars.CLUSTER_NAME }}
+      ECR_REPOSITORY_URL: ${{ vars.ECR_REPOSITORY_URL }}
+      DB_HOST: ${{ vars.DB_HOST }}
+      DB_SECRET_ARN: ${{ vars.DB_SECRET_ARN }}
+      ACM_CERT_ARN: ${{ vars.ACM_CERT_ARN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      - uses: aws-actions/amazon-ecr-login@v2
+      - name: Build and push immutable image
+        id: image
+        run: |
+          set -euo pipefail
+          tag="${GITHUB_SHA}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          docker build -t "${ECR_REPOSITORY_URL}:${tag}" platform/app
+          docker push "${ECR_REPOSITORY_URL}:${tag}"
+          repository_name="${ECR_REPOSITORY_URL#*/}"
+          digest="$(aws ecr describe-images --repository-name "$repository_name" --image-ids "imageTag=${tag}" --query 'imageDetails[0].imageDigest' --output text)"
+          echo "uri=${ECR_REPOSITORY_URL}@${digest}" >> "$GITHUB_OUTPUT"
+      - name: Deploy and verify
+        env:
+          IMAGE_URI: ${{ steps.image.outputs.uri }}
+        run: |
+          set -euo pipefail
+          aws eks update-kubeconfig --region "$AWS_REGION" --name "$CLUSTER_NAME"
+          python3 platform/scripts/render.py > /tmp/platform.yaml
+          kubectl apply -f /tmp/platform.yaml
+          kubectl rollout status deployment/platform-api -n platform --timeout=10m
+          kubectl get service platform-api -n platform
