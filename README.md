@@ -1,6 +1,6 @@
 # AWS DevOps: Zero to Production
 
-A hands-on path from first principles to operating an AWS application. Read the mental model, run a small local experiment, then build the [deployable platform](platform/README.md) when ready. This repository is a growing handbook, not a claim that every production system has the same architecture.
+A hands-on path from first principles to operating an AWS application. Read the mental model, run a small local experiment, then build the [deployable platform](platform/README.md) when ready. This repository is a growing handbook. Its [completion and verification status](COMPLETENESS.md) shows what is implemented, checked and still missing.
 
 > **Cost and security:** AWS labs can incur charges, including resources left idle. Set a budget and alerts before creating anything. Never use the root user for routine work, commit credentials, or assume a lab is free. Run each lab's cleanup and confirm deletion in the AWS console. Terraform state can contain secrets; protect it accordingly.
 

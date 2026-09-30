@@ -13,7 +13,8 @@ Status reflects reviewed, substantive material, not empty directories.
 | EKS Auto Mode, RDS, ECR, NLB, optional TLS and OIDC deployment | In Progress | Validate full create → deploy → external request → rollback → destroy in a disposable AWS account; then harden and add ALB option |
 | Database recovery and access | In Progress | Restore-test a backup/final snapshot, use a least-privilege app role, verify RDS TLS identity and handle credential rotation |
 | Runtime reliability and security | In Progress | Add app metrics/log collection, SLO alerts, external smoke checks, image scanning gate and dependency updates; assess Multi-AZ, NAT per AZ, private/restricted EKS API and network policies |
-| 18 progressive projects, failure labs and full runbook library | In Progress | Expand beyond included starter labs |
+| 18 progressive projects and failure labs | In Progress | Build separate reproducible labs with pass/fail checks and cleanup |
+| Production runbook topics | Draft coverage complete | Validate all 14 runbooks in controlled drills and adapt escalation to actual ownership |
 | VPN, cost optimization, interview guide and cheatsheets | Not Started | Detailed chapters and exercises |
 
 “Complete” means useful introductory coverage, not exhaustive service mastery. Cloud deployments are intentionally not run by CI. Each new cloud lab must include cost, access, verification and destruction guidance.
