@@ -14,6 +14,8 @@ Explain a browser request from DNS through TLS, load balancer, workload and data
 
 ## Start here
 
+Working on a data platform? Use the [data-platform preparation and evidence checklist](docs/data-platform-preparation.md) alongside this general AWS path. It adds connector, Trino and incident practice.
+
 1. [Foundations](docs/01-foundations.md) → [Linux](docs/02-linux.md) → [Networking](docs/03-networking.md).
 2. [Git and cloud](docs/04-git-cloud.md) → [AWS and IAM](docs/05-aws-iam.md) → [IAM deep dive](docs/services/iam-sts-identity.md) → [VPC](docs/06-vpc.md) → [packet-level VPC guide](docs/services/vpc-traffic.md).
 3. [Compute, storage and databases](docs/07-compute-data.md) → [compute/storage deep dive](docs/services/compute-storage.md) → [RDS deep dive](docs/services/rds-data.md) → [Docker lab](labs/01-local-api/README.md) → [Kubernetes](docs/08-kubernetes-eks.md) → [EKS deep dive](docs/services/eks-workloads.md) → [Helm deep dive](docs/services/helm-charts.md) → [Helm lab](labs/04-helm-chart/README.md).

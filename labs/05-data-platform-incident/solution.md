@@ -1,0 +1,11 @@
+# Example solution
+
+**Impact:** customer invoice data is stale by more than two hours. API 200 and Ready Pods do not prove the dashboard is current. Alert on last successful sync age (for example, beyond two expected intervals plus an agreed grace period) with tenant/source context. Do not alert solely on one failed retry if a later run recovers within the freshness objective.
+
+**Triage:** identify affected tenants and tables; inspect run IDs from 08:15 onward, source 429 headers/quotas, worker concurrency, lock ownership/expiry and the exact checkpoint. Compare source and target counts for a bounded time window and sample stable record IDs. Check whether a deploy or source schema/permission change preceded the failure. Avoid logging invoice payloads or credentials.
+
+**Mitigation:** pause competing jobs for this source, clear an orphaned lock only after proving its owner is gone, respect `Retry-After` and lower request concurrency. Resume from the last **durably committed** checkpoint. If checkpoint semantics are uncertain, do a bounded replay into an idempotent upsert or a staging table, compare counts/IDs and merge after review. Do not replay blindly if the target write has side effects or if source deletions could be overwritten by stale records. Communicate the data freshness impact and expected next update.
+
+**Durable fix:** implement a lease with expiry and heartbeat; token-bucket or server-guided rate limiting with bounded exponential backoff and jitter; per-source concurrency limits; checkpoint only after a committed target batch; stable upsert key; overlap/dedup or stable cursor for pagination; explicit deletion strategy; and per-tenant metrics for lag, failed records and lock age. Ensure a retried page produces the same final target state.
+
+**Verification:** simulate a 429 halfway through pages and assert recovery completes without skipped/duplicate invoices. Simulate worker death after target commit but before checkpoint commit and assert replay is safe. Verify source-to-target ID/count reconciliation and that a dashboard query includes a newly created test invoice. Record the new successful-sync timestamp, then remove any fictional test data used in a real implementation.
