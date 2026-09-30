@@ -62,7 +62,7 @@ Use VPC Flow Logs for flow metadata when configured; they do not contain HTTP pa
 
 ## Hands-on reasoning
 
-Without creating resources, inspect [network.tf](../../platform/terraform/network.tf), [database.tf](../../platform/terraform/database.tf) and [the Service](../../platform/kubernetes/app.yaml.tpl). Draw each subnet and route. Predict what breaks if the NAT gateway is deleted. Then predict what breaks if the RDS SG ingress is removed. The two failures affect different paths.
+Without creating resources, inspect [network.tf](../../platform/terraform/network.tf), [database.tf](../../platform/terraform/database.tf) and [the Service template](../../platform/chart/templates/service.yaml). Draw each subnet and route. Predict what breaks if the NAT gateway is deleted. Then predict what breaks if the RDS SG ingress is removed. The two failures affect different paths.
 
 ## Knowledge check
 

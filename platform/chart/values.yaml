@@ -1,0 +1,34 @@
+replicaCount: 2
+
+image:
+  repository: example.invalid/platform-api
+  digest: sha256:0000000000000000000000000000000000000000000000000000000000000000
+  pullPolicy: IfNotPresent
+
+app:
+  awsRegion: eu-west-1
+  dbHost: db.example.invalid
+  dbSecretArn: arn:aws:secretsmanager:eu-west-1:123456789012:secret:example
+
+serviceAccount:
+  name: platform-api
+
+service:
+  type: LoadBalancer
+  loadBalancerClass: eks.amazonaws.com/nlb
+  scheme: internet-facing
+  nlbTargetType: ip
+  tls:
+    enabled: false
+    certificateArn: ""
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    memory: 512Mi
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1

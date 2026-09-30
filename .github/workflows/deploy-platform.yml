@@ -33,6 +33,9 @@ jobs:
           role-to-assume: ${{ vars.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
       - uses: aws-actions/amazon-ecr-login@v2
+      - uses: azure/setup-helm@v4
+        with:
+          version: v4.3.0
       - name: Build and push immutable image
         id: image
         run: |
@@ -42,14 +45,27 @@ jobs:
           docker push "${ECR_REPOSITORY_URL}:${tag}"
           repository_name="${ECR_REPOSITORY_URL#*/}"
           digest="$(aws ecr describe-images --repository-name "$repository_name" --image-ids "imageTag=${tag}" --query 'imageDetails[0].imageDigest' --output text)"
-          echo "uri=${ECR_REPOSITORY_URL}@${digest}" >> "$GITHUB_OUTPUT"
-      - name: Deploy and verify
+          echo "digest=${digest}" >> "$GITHUB_OUTPUT"
+      - name: Deploy chart and verify
         env:
-          IMAGE_URI: ${{ steps.image.outputs.uri }}
+          IMAGE_DIGEST: ${{ steps.image.outputs.digest }}
         run: |
           set -euo pipefail
           aws eks update-kubeconfig --region "$AWS_REGION" --name "$CLUSTER_NAME"
-          python3 platform/scripts/render.py > /tmp/platform.yaml
-          kubectl apply -f /tmp/platform.yaml
+          helm lint platform/chart
+          tls_args=()
+          if [[ -n "$ACM_CERT_ARN" ]]; then
+            tls_args=(--set service.tls.enabled=true --set-string "service.tls.certificateArn=$ACM_CERT_ARN")
+          fi
+          helm upgrade --install platform-api platform/chart \
+            --namespace platform \
+            --wait --timeout 10m --rollback-on-failure --history-max 10 \
+            --set-string "image.repository=$ECR_REPOSITORY_URL" \
+            --set-string "image.digest=$IMAGE_DIGEST" \
+            --set-string "app.awsRegion=$AWS_REGION" \
+            --set-string "app.dbHost=$DB_HOST" \
+            --set-string "app.dbSecretArn=$DB_SECRET_ARN" \
+            "${tls_args[@]}"
           kubectl rollout status deployment/platform-api -n platform --timeout=10m
+          helm test platform-api --namespace platform --logs --timeout 3m
           kubectl get service platform-api -n platform

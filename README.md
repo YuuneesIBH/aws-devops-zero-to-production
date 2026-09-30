@@ -16,7 +16,7 @@ Explain a browser request from DNS through TLS, load balancer, workload and data
 
 1. [Foundations](docs/01-foundations.md) → [Linux](docs/02-linux.md) → [Networking](docs/03-networking.md).
 2. [Git and cloud](docs/04-git-cloud.md) → [AWS and IAM](docs/05-aws-iam.md) → [IAM deep dive](docs/services/iam-sts-identity.md) → [VPC](docs/06-vpc.md) → [packet-level VPC guide](docs/services/vpc-traffic.md).
-3. [Compute, storage and databases](docs/07-compute-data.md) → [compute/storage deep dive](docs/services/compute-storage.md) → [RDS deep dive](docs/services/rds-data.md) → [Docker lab](labs/01-local-api/README.md) → [Kubernetes](docs/08-kubernetes-eks.md) → [EKS deep dive](docs/services/eks-workloads.md).
+3. [Compute, storage and databases](docs/07-compute-data.md) → [compute/storage deep dive](docs/services/compute-storage.md) → [RDS deep dive](docs/services/rds-data.md) → [Docker lab](labs/01-local-api/README.md) → [Kubernetes](docs/08-kubernetes-eks.md) → [EKS deep dive](docs/services/eks-workloads.md) → [Helm deep dive](docs/services/helm-charts.md) → [Helm lab](labs/04-helm-chart/README.md).
 4. [Terraform](docs/09-terraform.md) → [VPC lab](labs/02-terraform-vpc/README.md) → [CI/CD](docs/10-delivery.md) → [Terraform/delivery deep dive](docs/services/terraform-delivery.md).
 5. [Operations](docs/11-operations.md) → [observability deep dive](docs/services/observability-operations.md) → [DNS/TLS/NLB](docs/services/dns-tls-load-balancing.md) → [AWS service map](docs/services/aws-service-map.md) → [failure lab](labs/03-failure-lab/README.md) → [deployable platform](platform/README.md) → [capstone design](architecture/capstone.md).
 
@@ -51,7 +51,7 @@ The [platform implementation](platform/README.md) supplies the AWS infrastructur
 | `runbooks/` | Production triage templates |
 | `architecture/` | System-level design and tradeoffs |
 | `.github/workflows/` | Local checks and OIDC-based platform deployment |
-| `platform/` | Deployable EKS, RDS, ECR, Pod Identity and GitHub OIDC path |
+| `platform/` | Deployable EKS, RDS, ECR, Pod Identity and Helm-based GitHub OIDC path |
 
 ## Checkpoints
 

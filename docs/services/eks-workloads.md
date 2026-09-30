@@ -4,7 +4,7 @@ Read [Kubernetes and EKS basics](../08-kubernetes-eks.md) first. Kubernetes is a
 
 ## 1. Objects and controllers
 
-`kubectl apply` sends API objects to the Kubernetes API server. The Deployment controller creates a ReplicaSet. The ReplicaSet creates Pods. The scheduler chooses a suitable node for each unscheduled Pod. Kubelet on the node obtains the image and starts containers. Auto Mode observes unschedulable demand and may provision EC2-backed nodes through its node pools. No single controller executes the whole pipeline.
+`kubectl apply` or a Helm release sends API objects to the Kubernetes API server. The Deployment controller creates a ReplicaSet. The ReplicaSet creates Pods. The scheduler chooses a suitable node for each unscheduled Pod. Kubelet on the node obtains the image and starts containers. Auto Mode observes unschedulable demand and may provision EC2-backed nodes through its node pools. No single controller executes the whole pipeline.
 
 ```mermaid
 flowchart LR
@@ -23,7 +23,7 @@ A Pod is replaceable. Its IP and node can change. A Service offers a stable abst
 
 CPU/memory requests inform scheduling and capacity provisioning. A container with no suitable node remains Pending until capacity appears or constraints change. Memory limits can terminate a process with OOMKilled. CPU limits throttle rather than kill; the platform omits a CPU limit while setting a request. This is a starting point, not a universal performance setting. Observe real utilization and tune. Auto Mode's managed nodes are still billable compute; “managed” is not “free.”
 
-For production replicas, choose a PodDisruptionBudget only after reasoning about actual capacity and drain behavior. `replicas: 2` improves availability only if Pods can land on different failure domains. Add topology spread constraints or affinity rules after verifying the node pool and AZ placement. The starter manifest does not claim AZ-separated Pods.
+For production replicas, choose a PodDisruptionBudget only after reasoning about actual capacity and drain behavior. `replicas: 2` improves availability only if Pods can land on different failure domains. The chart asks for best-effort zone spreading and one available Pod during voluntary disruption; it does not guarantee AZ-separated Pods. Verify actual node placement and capacity.
 
 ## 3. ECR and immutable images
 
@@ -69,7 +69,7 @@ Do not automatically roll back every failure: first check whether the previous a
 
 ## Hands-on exercise
 
-Compare Service selector and Deployment Pod labels in [the manifest](../../platform/kubernetes/app.yaml.tpl). Predict the effect of changing only one label. Render the manifest with placeholder environment variables using [render.py](../../platform/scripts/render.py), then inspect readiness/liveness/startup probes. In a disposable cluster, use the [failure lab](../../labs/03-failure-lab/README.md) to prove your prediction.
+Compare Service selector and Deployment Pod labels in [the chart templates](../../platform/chart/README.md). Predict the effect of changing only one label. Run `helm template platform-api platform/chart --namespace platform`, then inspect readiness/liveness/startup probes. In a disposable cluster, use the [failure lab](../../labs/03-failure-lab/README.md) to prove your prediction. Continue with the [Helm deep dive](helm-charts.md).
 
 ## Knowledge check
 

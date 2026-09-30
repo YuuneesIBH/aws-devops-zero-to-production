@@ -6,9 +6,9 @@ Status reflects reviewed, substantive material, not empty directories.
 | --- | --- | --- |
 | Computer, Linux, networking, Git and cloud mental models | Complete | More guided exercises |
 | AWS service models: IAM, VPC, compute, storage, EKS, RDS, DNS/TLS | Complete | More hands-on service-specific labs and live validation |
-| Docker and local Kubernetes examples | Complete | Compose and persistent-volume lab |
+| Docker, local Kubernetes and Helm chart fundamentals | Complete | Compose, persistent-volume and live Helm upgrade labs |
 | Terraform VPC lab | Complete | Separate state bootstrap and private endpoints |
-| CI/CD fundamentals and local CI | Complete | Reviewed OIDC deployment example |
+| CI/CD fundamentals and Helm-based OIDC deployment | Complete | Live deployment and rollback verification |
 | Observability, security and incident basics | Complete | Application metrics, centralized logs, tracing and SLO alerts |
 | EKS Auto Mode, RDS, ECR, NLB, optional TLS and OIDC deployment | In Progress | Validate live in a disposable AWS account; then harden and add ALB option |
 | 18 progressive projects, failure labs and full runbook library | In Progress | Expand beyond included starter labs |

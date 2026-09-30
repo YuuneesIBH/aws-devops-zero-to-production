@@ -15,4 +15,9 @@ jobs:
       - run: python3 scripts/check_docs.py
       - run: python3 -m unittest discover -s labs/01-local-api/tests
       - run: python3 -m unittest discover -s platform/app/tests
+      - uses: azure/setup-helm@v4
+        with:
+          version: v4.3.0
+      - run: helm lint platform/chart
+      - run: helm template platform-api platform/chart > /tmp/platform-rendered.yaml
       - run: git diff --check

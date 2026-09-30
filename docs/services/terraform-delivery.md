@@ -30,7 +30,7 @@ If someone edits an RDS security group in the AWS console, Terraform may propose
 
 ## 4. GitHub OIDC deployment path
 
-The [workflow](../../.github/workflows/deploy-platform.yml) runs tests, assumes a narrowly scoped AWS role through GitHub OIDC, builds an image, pushes to ECR, retrieves its digest and deploys a rendered manifest. Environment variables such as cluster name and secret ARN are identifiers, not passwords. The workflow requests `id-token: write` only on the deploy job. The trust policy matches the exact repository and `main` branch. Production use should add GitHub environment reviewers and branch protection.
+The [workflow](../../.github/workflows/deploy-platform.yml) runs tests, assumes a narrowly scoped AWS role through GitHub OIDC, builds an image, pushes to ECR, retrieves its digest and upgrades the [Helm chart](helm-charts.md). Environment variables such as cluster name and secret ARN are identifiers, not passwords. The workflow requests `id-token: write` only on the deploy job. The trust policy matches the exact repository and `main` branch. Production use should add GitHub environment reviewers and branch protection.
 
 ```mermaid
 flowchart LR
@@ -39,15 +39,15 @@ flowchart LR
   OIDC --> Build[Docker build]
   Build --> ECR
   ECR --> Digest[Image digest]
-  Digest --> Deploy[kubectl apply]
+  Digest --> Deploy[Helm upgrade]
   Deploy --> Ready[Readiness / rollout]
 ```
 
-The image tag includes commit and workflow run information so reruns do not collide with immutable ECR tags. The Kubernetes Deployment uses `repository@sha256:...`, which identifies exact content. `kubectl rollout status` succeeds only when enough new Pods become ready; it does not prove public DNS/TLS or a complete user journey. The [platform guide](../../platform/README.md) adds external smoke checks. A release pipeline should eventually verify a real transaction and alert state before promotion.
+The image tag includes commit and workflow run information so reruns do not collide with immutable ECR tags. The Kubernetes Deployment uses `repository@sha256:...`, which identifies exact content. Helm waits for readiness and runs a test hook; neither proves public DNS/TLS or a complete user journey. The [platform guide](../../platform/README.md) adds external smoke checks. A release pipeline should eventually verify a real transaction and alert state before promotion.
 
 ## 5. Rollback and database compatibility
 
-`kubectl rollout undo` can restore an earlier Pod template, but it cannot undo a database schema migration, deleted data or a changed external API. Use expand-and-contract schema changes: add backward-compatible fields, deploy code that understands both versions, migrate data, then remove old fields in a later release. Store release digest and migration version. During an incident, decide whether rollback is safe before executing it. Verify user traffic after any rollback.
+`helm rollback` can restore an earlier chart and values revision, but it cannot undo a database schema migration, deleted data or a changed external API. Use expand-and-contract schema changes: add backward-compatible fields, deploy code that understands both versions, migrate data, then remove old fields in a later release. Store release digest and migration version. During an incident, decide whether rollback is safe before executing it. Verify user traffic after any rollback.
 
 ## 6. Destroy as a planned change
 

@@ -1,6 +1,6 @@
 # Deployable AWS platform
 
-Before provisioning, follow the [service map](../docs/services/aws-service-map.md) and deep dives on [IAM](../docs/services/iam-sts-identity.md), [VPC](../docs/services/vpc-traffic.md), [EKS](../docs/services/eks-workloads.md), [RDS](../docs/services/rds-data.md), [Terraform/delivery](../docs/services/terraform-delivery.md), [DNS/TLS](../docs/services/dns-tls-load-balancing.md) and [operations](../docs/services/observability-operations.md). Each explains the matching platform files, failure paths and tradeoffs.
+Before provisioning, follow the [service map](../docs/services/aws-service-map.md) and deep dives on [IAM](../docs/services/iam-sts-identity.md), [VPC](../docs/services/vpc-traffic.md), [EKS](../docs/services/eks-workloads.md), [Helm](../docs/services/helm-charts.md), [RDS](../docs/services/rds-data.md), [Terraform/delivery](../docs/services/terraform-delivery.md), [DNS/TLS](../docs/services/dns-tls-load-balancing.md) and [operations](../docs/services/observability-operations.md). Each explains the matching platform files, failure paths and tradeoffs.
 
 This directory turns the handbook's architecture into an implementable path: two-AZ VPC → private EKS Auto Mode workloads → private PostgreSQL RDS → ECR → GitHub OIDC deployment → public NLB. Optional ACM/Route 53 adds a TLS hostname. CloudWatch supplies RDS alarms and a dashboard; SNS email delivery is optional. The API proves access to RDS through Pod Identity and an RDS-managed Secrets Manager password. The infrastructure is **not deployed by this repository's CI**; no AWS account is configured here.
 
@@ -17,7 +17,7 @@ flowchart LR
 
 ## Before any apply
 
-**Charges start with EKS, Auto Mode compute, NAT gateway, NLB, RDS, ECR and data transfer.** Inspect [current AWS pricing](https://aws.amazon.com/pricing/) for your region. Use a disposable account, budget alerts and a federated administrator role; verify `aws sts get-caller-identity`. You need Terraform 1.10+, AWS CLI, kubectl, gh, Python 3.10+ and Docker only for local builds. AWS CLI and Docker were unavailable in the authoring environment; no live deployment was run.
+**Charges start with EKS, Auto Mode compute, NAT gateway, NLB, RDS, ECR and data transfer.** Inspect [current AWS pricing](https://aws.amazon.com/pricing/) for your region. Use a disposable account, budget alerts and a federated administrator role; verify `aws sts get-caller-identity`. You need Terraform 1.10+, AWS CLI, kubectl, Helm 3/4, gh, Python 3.10+ and Docker only for local builds. AWS CLI and Docker were unavailable in the authoring environment; no live deployment was run.
 
 Read the [AWS EKS Auto Mode guide](https://docs.aws.amazon.com/eks/latest/userguide/automode.html), [RDS password management](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-secrets-manager.html), [GitHub OIDC guide](https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws) and [S3 backend](https://developer.hashicorp.com/terraform/language/backend/s3) before production adaptation. This design uses one NAT gateway for cost; that is a single-AZ outbound dependency. It uses one RDS instance rather than Multi-AZ and a public EKS API endpoint for bootstrap. Tighten these for a production reliability/security target. The app uses the RDS master credential to demonstrate the full chain; create a separate low-privilege database user before using it for real application data.
 
@@ -68,7 +68,7 @@ The script saves non-secret resource identifiers as GitHub environment variables
 
 ## 4. Deploy API
 
-Run `gh workflow run deploy-platform.yml`, approve its environment gate if configured, then `gh run watch`. CI tests the API, builds and pushes a uniquely tagged image, resolves its immutable digest, renders the manifest, applies it and waits for rollout. Auto Mode provisions a public NLB from the Service. ECR images are scanned on push; review scan findings as part of release review.
+Run `gh workflow run deploy-platform.yml`, approve its environment gate if configured, then `gh run watch`. CI tests the API, builds and pushes a uniquely tagged image, resolves its immutable digest, upgrades the [Helm chart](chart/README.md), waits for rollout and runs `helm test`. Auto Mode provisions a public NLB from the Service. ECR images are scanned on push; review scan findings as part of release review.
 
 ```sh
 kubectl get pods,service,endpointslices -n platform
@@ -87,12 +87,12 @@ Without TLS, call `http://NLB_HOST/health` and `http://NLB_HOST/ready`. `/ready`
 | `/ready` returns 503 | Pod logs; Pod Identity association, secret ARN, RDS SG, endpoint and database status |
 | NLB hostname absent | `kubectl describe svc`; public subnet tags, Auto Mode status, AWS quotas |
 | TLS fails | ACM validation, certificate ARN/region, DNS name, NLB listener |
-| Rollout fails | `kubectl rollout history`, Pod events/logs; use [rollback runbook](../runbooks/deployment-rollback.md) |
+| Rollout fails | `helm history platform-api -n platform`, Pod events/logs; use [rollback runbook](../runbooks/deployment-rollback.md) |
 
 ## Destroy without orphaned charges
 
 1. Stop new deploys. Remove optional DNS CNAME via Route 53 console or CLI.
-2. Delete Service and Deployment by name (`kubectl delete service/platform-api deployment/platform-api -n platform`); wait until the AWS NLB is gone. Delete ServiceAccount and namespace.
+2. Run `helm uninstall platform-api -n platform`; wait until the AWS NLB is gone. Inspect failed test hook Pods if present, then delete namespace `platform`.
 3. Delete all images in the ECR repository (it has `force_delete = false`).
 4. If `deletion_protection = true`, intentionally change it to `false` and apply a reviewed plan first. Decide whether to retain a final DB snapshot; snapshots and secrets can incur charges.
 5. From `platform/terraform`, run `terraform plan -destroy`, review, then `terraform destroy`. Confirm RDS, EKS, NAT, NLB, ECR, EIPs and VPC resources are absent in AWS. Protect or retire the state bucket separately after checking object versions and lock files.

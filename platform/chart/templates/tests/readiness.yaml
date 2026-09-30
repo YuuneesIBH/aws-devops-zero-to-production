@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ include "platform-api.name" . }}-readiness-test
+  labels:
+    {{- include "platform-api.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: test
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+spec:
+  restartPolicy: Never
+  automountServiceAccountToken: false
+  containers:
+    - name: check
+      image: {{ printf "%s@%s" .Values.image.repository .Values.image.digest | quote }}
+      command:
+        - python
+        - -c
+        - {{ printf "import urllib.request; urllib.request.urlopen('http://%s:%d/ready', timeout=10).read()" (include "platform-api.name" .) (ternary 443 80 .Values.service.tls.enabled) | quote }}
+      securityContext:
+        allowPrivilegeEscalation: false
+        runAsNonRoot: true
+        runAsUser: 65532
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop: ["ALL"]
+        seccompProfile:
+          type: RuntimeDefault

@@ -15,3 +15,5 @@ Why does increasing replicas not fix a bad image? How can a healthy Pod receive 
 Further reading: [Kubernetes concepts](https://kubernetes.io/docs/concepts/), [EKS access](https://docs.aws.amazon.com/eks/latest/userguide/cluster-auth.html), [EKS Pod Identity](https://docs.aws.amazon.com/eks/latest/userguide/pod-identities.html).
 
 Continue with [EKS Auto Mode workloads](services/eks-workloads.md).
+
+Then study [Helm charts and release lifecycle](services/helm-charts.md) and complete the [Helm lab](../labs/04-helm-chart/README.md).

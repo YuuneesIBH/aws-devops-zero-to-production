@@ -8,6 +8,7 @@ Start with the ordered [foundation chapters](../01-foundations.md). Then follow 
 | 2 | [VPC traffic](vpc-traffic.md) | Which route and filter let a packet reach its target? |
 | 3 | [Compute and storage](compute-storage.md) | What runs, persists and survives replacement? |
 | 4 | [EKS workloads](eks-workloads.md) | How does an image become a ready public service? |
+| 4a | [Helm charts](helm-charts.md) | How do templates and values become a managed release? |
 | 5 | [RDS data path](rds-data.md) | How does a Pod authenticate and query a private DB? |
 | 6 | [Terraform and delivery](terraform-delivery.md) | How do reviewed changes become AWS resources and releases? |
 | 7 | [DNS, TLS and NLB](dns-tls-load-balancing.md) | How does a browser reach the right Pod securely? |
