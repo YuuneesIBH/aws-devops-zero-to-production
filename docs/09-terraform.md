@@ -11,3 +11,5 @@ The [VPC lab](../labs/02-terraform-vpc/README.md) creates only a VPC and two sub
 Why can two engineers applying against the same state cause damage? What does `plan` show that `fmt` cannot? Why does a VPC subnet not become public merely because its name says `public`?
 
 Further reading: [Terraform state](https://developer.hashicorp.com/terraform/language/state), [S3 backend](https://developer.hashicorp.com/terraform/language/backend/s3).
+
+Continue with [Terraform and the release boundary](services/terraform-delivery.md).

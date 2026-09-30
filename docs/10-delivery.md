@@ -11,3 +11,5 @@ For a Kubernetes Deployment, `kubectl rollout status deployment/demo-api` waits 
 Why pin deployment to an image digest? Why should a pull request test job not have AWS deploy permissions? What failure can make rollback unsafe after a database schema migration?
 
 Further reading: [GitHub OIDC with AWS](https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws), [Kubernetes deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/).
+
+Continue with [Terraform and GitHub Actions in the platform](services/terraform-delivery.md).

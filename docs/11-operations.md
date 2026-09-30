@@ -13,3 +13,5 @@ Cost is an operational signal. Check budgets, usage and tags; right-size after m
 Why does a healthy CPU metric not prove users can log in? What distinguishes a symptom alert from a cause dashboard? What must be verified after rollback?
 
 Further reading: [AWS Well-Architected](https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html), [Prometheus alerting](https://prometheus.io/docs/practices/alerting/), [Grafana alerting](https://grafana.com/docs/grafana/latest/alerting/).
+
+Continue with [CloudWatch, CloudTrail and production signals](services/observability-operations.md).

@@ -25,3 +25,5 @@ Example: read objects from one bucket prefix. Replace placeholder bucket and pat
 How does a trust policy differ from a permission policy? Why does an allow sometimes still yield `AccessDenied`? Why are temporary workload credentials safer than stored access keys?
 
 Further reading: [AWS IAM best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html), [IAM policy evaluation](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html).
+
+Continue with [IAM, STS and identity in the platform](services/iam-sts-identity.md).

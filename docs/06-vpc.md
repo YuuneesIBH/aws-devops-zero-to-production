@@ -24,3 +24,5 @@ If an app cannot reach RDS: check endpoint and DNS, RDS status, security group s
 Does a public route alone give an instance a public IP? Why can a private workload initiate Internet traffic through NAT but receive no unsolicited inbound connection? What does a stateful security group remember?
 
 Further reading: [VPC user guide](https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html), [VPC route tables](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html).
+
+Continue with [VPC traffic through the platform](services/vpc-traffic.md).

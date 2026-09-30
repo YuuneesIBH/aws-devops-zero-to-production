@@ -1,5 +1,7 @@
 # Deployable AWS platform
 
+Before provisioning, follow the [service map](../docs/services/aws-service-map.md) and deep dives on [IAM](../docs/services/iam-sts-identity.md), [VPC](../docs/services/vpc-traffic.md), [EKS](../docs/services/eks-workloads.md), [RDS](../docs/services/rds-data.md), [Terraform/delivery](../docs/services/terraform-delivery.md), [DNS/TLS](../docs/services/dns-tls-load-balancing.md) and [operations](../docs/services/observability-operations.md). Each explains the matching platform files, failure paths and tradeoffs.
+
 This directory turns the handbook's architecture into an implementable path: two-AZ VPC → private EKS Auto Mode workloads → private PostgreSQL RDS → ECR → GitHub OIDC deployment → public NLB. Optional ACM/Route 53 adds a TLS hostname. CloudWatch supplies RDS alarms and a dashboard; SNS email delivery is optional. The API proves access to RDS through Pod Identity and an RDS-managed Secrets Manager password. The infrastructure is **not deployed by this repository's CI**; no AWS account is configured here.
 
 ```mermaid

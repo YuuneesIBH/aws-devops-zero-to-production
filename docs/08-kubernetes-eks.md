@@ -13,3 +13,5 @@ EKS is managed Kubernetes control plane plus AWS integrations; you still configu
 Why does increasing replicas not fix a bad image? How can a healthy Pod receive no traffic? Which component chooses a node? Why should a Pod use its own IAM role instead of node-wide permissions?
 
 Further reading: [Kubernetes concepts](https://kubernetes.io/docs/concepts/), [EKS access](https://docs.aws.amazon.com/eks/latest/userguide/cluster-auth.html), [EKS Pod Identity](https://docs.aws.amazon.com/eks/latest/userguide/pod-identities.html).
+
+Continue with [EKS Auto Mode workloads](services/eks-workloads.md).

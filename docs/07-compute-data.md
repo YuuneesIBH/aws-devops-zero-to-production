@@ -15,3 +15,5 @@ Resolve endpoint, test TCP port from the *application environment*, check RDS st
 Why is an EBS volume not equivalent to S3? Why might a healthy RDS instance still reject an application? What changes when a read replica lags?
 
 Further reading: [EC2 user guide](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html), [S3 user guide](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html), [RDS user guide](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html).
+
+Continue with [compute and storage](services/compute-storage.md) and [RDS PostgreSQL](services/rds-data.md).
